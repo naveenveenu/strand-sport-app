@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Button, Tab, Form, Table, Checkbox,Icon, Image, Select} from 'semantic-ui-react';
+import { Container, Button, Tab, Form, Table, Checkbox,Icon, Image, Select, Segment} from 'semantic-ui-react';
 import axios from 'axios';
 
 export default class AdminDialog extends React.Component{
@@ -7,6 +7,7 @@ export default class AdminDialog extends React.Component{
     super(props);
     this.state = {
       UserName: '',
+      password: '',
       Email: 'example@google.com',
       logging: 'login',
       successfulLogin: false,
@@ -25,6 +26,7 @@ export default class AdminDialog extends React.Component{
     this.addTeam = this.addTeam.bind(this);
     this.addPlayer = this.addPlayer.bind(this);
     this.onUserNameChange = this.onUserNameChange.bind(this);
+    this.onPasswordChange = this.onPasswordChange.bind(this);
     this.onEmailChange = this.onEmailChange.bind(this);
     this.onLoginOptionChange = this.onLoginOptionChange.bind(this);
     this.loadComponent = this.loadComponent.bind(this);
@@ -92,21 +94,27 @@ export default class AdminDialog extends React.Component{
 
     let Name = document.getElementById('Name').value;
     TeamNames.push({text:Name, key: Name, value: Name});
+    let TeamLogoPath = document.getElementById('filePath').value;
 
     tableData.push({
-      Name,
-      Logo: document.getElementById('filePath').value,
-
+      Name: Name,
+      Logo: TeamLogoPath,
     });
-    document.getElementById('Name').value = '';
-    document.getElementById('filePath').value = '';
-    document.getElementById('filePath').innerHTML = '';
+
+    let teamData = {TeamName: Name, LogoPath: TeamLogoPath};
+    axios.post('http://localhost:4000/strand/team', teamData)
+      .then(res => console.log(res.data));
+      
     this.setState({
       tableData,
       TeamNames,
       file: null,
-
     })
+    console.log('Registered successfully');
+
+    document.getElementById('Name').value = '';
+    document.getElementById('filePath').value = '';
+    document.getElementById('filePath').innerHTML = '';
   }
   removePlayer(e, k) {
     e.preventDefault();
@@ -128,9 +136,12 @@ export default class AdminDialog extends React.Component{
   }
   onSubmit(e) {
     e.preventDefault();
+    console.log("Came into submit method")
     if(this.state.logging === "login") {
-      let userCredentials = {UserName: this.state.UserName};
-      axios.get('http://localhost:4000/strand/login/'+this.state.UserName, userCredentials)
+      /*let userCredentials = {UserName: this.state.UserName, Password: this.state.Password};
+      axios.get('http://localhost:4000/strand/login/'+this.state.UserName, userCredentials)*/
+      let userCredentials = {"userName": this.state.UserName, "password": this.state.Password, "@class" : ".AuthenticationRequest"};
+      axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/AuthenticationRequest', userCredentials)
           .then(res => {
             console.log(res.data);
             console.log('login successful');
@@ -152,8 +163,10 @@ export default class AdminDialog extends React.Component{
               // });
 
     }else {
-      let userCredentials = {UserName: this.state.UserName, Email: this.state.Email};
-      axios.post('http://localhost:4000/strand/login', userCredentials)
+      /*let userCredentials = {UserName: this.state.UserName, Email: this.state.Email};
+      axios.post('http://localhost:4000/strand/login', userCredentials)*/
+      let userCredentials = {"rawModeData": {"userName": this.state.UserName, "displayName": this.state.Email, "password": "123456", "@class" : ".RegistrationRequest"}};
+      axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/RegistrationRequest', userCredentials)
           .then(res => console.log(res.data));
           this.setState({
             UserName: '',
@@ -176,34 +189,46 @@ export default class AdminDialog extends React.Component{
     });
   }
 
+  onPasswordChange(e) {
+    this.setState({
+      Password: e.target.value,
+    });
+  }
+
+
   loginForm() {
-      return(<Form>
-        <Form.Group inline>
-          <Form.Radio
-            label='Login'
-            value='login'
-            checked={this.state.logging === 'login'}
-            onChange={this.onLoginOptionChange}
-          />
-          <Form.Radio
-            label='Register'
-            value='register'
-            checked={this.state.logging === 'register'}
-            onChange={this.onLoginOptionChange}
-          />
-          </Form.Group>
-
-      {this.state.logging === 'login' ? <div />:<Form.Field>
-        <input type="email" value={this.state.Email} onChange={this.onEmailChange} placeholder="Email" />
-      </Form.Field>}
-
-        <Form.Field>
-          <input type="text" value={this.state.UserName} onChange={this.onUserNameChange} placeholder="UserName" />
-        </Form.Field>
-        <Button type="submit" onClick={this.onSubmit}>
-          Submit
-        </Button>
-      </Form>);
+      return(
+        <Segment inverted color='teal'>
+          <Form inverted>
+            <Form.Group inline>
+              <Form.Radio
+                label='Login'
+                value='login'
+                checked={this.state.logging === 'login'}
+                onChange={this.onLoginOptionChange}
+              />
+              <Form.Radio
+                label='Register'
+                value='register'
+                checked={this.state.logging === 'register'}
+                onChange={this.onLoginOptionChange}
+              />
+            </Form.Group>
+            {this.state.logging === 'login' ? <div />:<Form.Field>
+              <input type="email" value={this.state.Email} onChange={this.onEmailChange} placeholder="Email" />
+            </Form.Field>}
+            <Form.Field>
+              <label>User Name</label>
+              <input type="text" value={this.state.UserName} onChange={this.onUserNameChange} placeholder="UserName" />
+              <label>Password</label>
+              <input type="password" value={this.state.Password} onChange={this.onPasswordChange} placeholder="Password" />
+            </Form.Field>
+            <Button type="submit" onClick={this.onSubmit}>
+              Submit
+            </Button>
+          </Form>
+      </Segment>
+      );
   }
   prevent(e) {
     e.preventDefault();

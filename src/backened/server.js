@@ -46,6 +46,39 @@ sportRoutes.route('/login').post(function(req, res) {
         });
 });
 
+sportRoutes.route('/team').post(function(req, res) {
+    let createEntry = new Team(req.body);
+    createEntry.save()
+        .then(todo => {
+            res.status(200).json({'team': 'team added successfully to the database'});
+        })
+        .catch(err => {
+            res.status(400).send('Team registration failed. Try again');
+        });
+});
+
+sportRoutes.route('/team/:id').get(function(req, res) {
+    let createEntry = new Team(req.body);
+    createEntry.save()
+        .then(todo => {
+            res.status(200).json({'team': 'team added successfully to the database'});
+        })
+        .catch(err => {
+            res.status(400).send('Registration failed. Try again');
+        });
+});
+
+sportRoutes.route('/team/').get(function(req, res) {
+    let teamListing = new Team();
+    teamListing.list()
+        .then(todo => {
+            res.status(200).json({'team': 'team added successfully to the database'});
+        })
+        .catch(err => {
+            res.status(400).send('Registration failed. Try again');
+        });
+});
+
 app.use('/strand', sportRoutes);
 app.listen(PORT, function() {
     console.log("Server is running on Port: " + PORT);

@@ -1,6 +1,8 @@
 import React from 'react';
 import Modal from '../Modal/Modal';
 import { truncateSync } from 'fs';
+import {Image} from 'semantic-ui-react';
+
 
 const withModal =(WrappedComponent) => {
     class _WithModal extends React.Component{

@@ -2,6 +2,8 @@ import React from 'react';
 import Slide from './slide';
 import './slideshow.css';
 import withModal from '../HOC/withModal';
+import { Image, Card} from 'semantic-ui-react';
+
 
 export default class Slideshow extends React.Component{
     render(){
@@ -11,7 +13,9 @@ export default class Slideshow extends React.Component{
         })
         return(
             <div className="slide-container">
-                {slides}
+                <Card.Group itemsPerRow={4}>
+                    <Card color='red'>{slides}</Card>
+                </Card.Group>     
             </div>
         )         
     }

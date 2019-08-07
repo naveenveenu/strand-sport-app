@@ -1,27 +1,27 @@
 import React, {Component} from 'react';
 //import gallaryImg from ".././resources/logo.png";
 import Slideshow from '../components/Slideshow';
-//import images from './Slideshow/GalleryPhotos';
+import image1 from './Slideshow/GalleryPhotos/BadminionsTeam-2.JPG';
+import { Image} from 'semantic-ui-react';
 
 export default class Gallery extends React.Component{
 
   state = {
     images:[
-      {id:1, url:"https://picsum.photos/id/237/200/300"},
-      {id:2, url:"https://picsum.photos/id/238/200/300"},
-      {id:3, url:"https://picsum.photos/id/239/200/300"},
-      {id:4, url:"https://picsum.photos/id/240/200/300"},
-      {id:5, url:"https://picsum.photos/id/241/200/300"},
-      {id:6, url:"https://picsum.photos/id/242/200/300"},
-      {id:7, url:"https://picsum.photos/id/243/200/300"},
-      {id:8, url:"https://picsum.photos/id/244/200/300"},
+      //{id:1, src: image1}, {id:2, src: image1},
+        {id:2, url:"https://picsum.photos/id/238/200/300"},
+       {id:3, url:"https://picsum.photos/id/239/200/300"},
+       {id:4, url:"https://picsum.photos/id/240/200/300"},
+       {id:5, url:"https://picsum.photos/id/241/200/300"},
+       {id:6, url:"https://picsum.photos/id/242/200/300"},
+       {id:7, url:"https://picsum.photos/id/243/200/300"},
+       {id:8, url:"https://picsum.photos/id/244/200/300"},
     ]
   }
 
   render(){
     return(
-      <Slideshow slides = {this.state.images} />
-
+        <Slideshow slides = {this.state.images} />
     )
   }
 }

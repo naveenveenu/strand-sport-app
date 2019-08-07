@@ -19,6 +19,8 @@ export default class AdminDialog extends React.Component{
       tableData: [],
       TeamNames: [],
       playersData: [],
+      Tournament: '5d3d3ad413e61004e5c0ffc8-1564298778175',
+      UserId: null
     };
     this.onSubmit = this.onSubmit.bind(this);
     this.removeTeam = this.removeTeam.bind(this);
@@ -39,7 +41,9 @@ export default class AdminDialog extends React.Component{
     this.getPlayersTab = this.getPlayersTab.bind(this);
     this.updateScoresTab = this.updateScoresTab.bind(this);
     this.getFixturesTab = this.getFixturesTab.bind(this);
+    this.listTeams = this.listTeams.bind(this);
   }
+
   fileInputRef = React.createRef();
   fileChange = e => {
     this.setState({ file: URL.createObjectURL(e.target.files[0]) }, () => {
@@ -67,6 +71,7 @@ export default class AdminDialog extends React.Component{
       logging: value,
     });
   }
+
   addPlayer(e) {
     e.preventDefault();
     console.log("Adding Player", document.getElementById("teams").selected, document.getElementById("teams").value);
@@ -87,6 +92,22 @@ export default class AdminDialog extends React.Component{
     })
   }
 
+  listTeams(e) {
+    let tournamentData = {"@class": ".LogEventRequest", "eventKey": "ListTeamsInTournament", "tournamentId": this.state.Tournament};
+    axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/LogEventRequest', tournamentData)
+      .then(res => { 
+        console.log(res.data);
+        let teams = res.data.teams;
+        this.state.tableData = [];
+        teams.forEach(team => {
+          this.state.tableData.push({
+            Name: team.teamName,
+            Logo: team.metaData.LogoPath
+          });
+        });
+      });
+  }
+
   addTeam(e) {
     e.preventDefault();
     let tableData = this.state.tableData;
@@ -101,21 +122,22 @@ export default class AdminDialog extends React.Component{
       Logo: TeamLogoPath,
     });
 
-    let teamData = {TeamName: Name, LogoPath: TeamLogoPath};
-    axios.post('http://localhost:4000/strand/team', teamData)
+    let teamData = {"@class": ".LogEventRequest", "eventKey": "AddTeamToTournament", "teamName": Name, "tournamentId" : this.state.Tournament, "pool":"A", "metaData": {"LogoPath": TeamLogoPath}};
+    axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/LogEventRequest', teamData)
       .then(res => console.log(res.data));
       
-    this.setState({
-      tableData,
-      TeamNames,
-      file: null,
-    })
+      this.setState({
+        tableData,
+        TeamNames,
+        file: null,
+      })
     console.log('Registered successfully');
 
     document.getElementById('Name').value = '';
     document.getElementById('filePath').value = '';
     document.getElementById('filePath').innerHTML = '';
   }
+
   removePlayer(e, k) {
     e.preventDefault();
     console.log(e, k.id);
@@ -134,6 +156,12 @@ export default class AdminDialog extends React.Component{
       tableData,
     });
   }
+
+// =============================================================================
+// =============================================================================
+// =============================================================================
+
+
   onSubmit(e) {
     e.preventDefault();
     console.log("Came into submit method")
@@ -144,36 +172,47 @@ export default class AdminDialog extends React.Component{
       axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/AuthenticationRequest', userCredentials)
           .then(res => {
             console.log(res.data);
-            console.log('login successful');
-            this.setState({
-              successfulLogin: true
-            });
+            console.log(res.data.userId)
+            if (res.data.userId) {
+              console.log('login successful');
+              this.state.UserId = res.data.userId;
+              this.setState({
+                successfulLogin: true
+              });
+            }else{
+              console.log("Login Not Successful")
+            }
           })
           .catch(function (error){
               console.log(error);
           });
-          //
-          // axios.get('http://localhost:4000/strand/login/'+this.state.UserName)
-          //     .then(response => {
-          //         console.log('Login successful');
-          //
-          //     })
-              // .catch(function (error){
-              //     console.log(error);
-              // });
-
-    }else {
+       
+    } else {
       /*let userCredentials = {UserName: this.state.UserName, Email: this.state.Email};
       axios.post('http://localhost:4000/strand/login', userCredentials)*/
-      let userCredentials = {"rawModeData": {"userName": this.state.UserName, "displayName": this.state.Email, "password": "123456", "@class" : ".RegistrationRequest"}};
+      console.log("came into else part")
+      let userCredentials = {"userName": this.state.UserName, "displayName": "", "password": this.state.Password, "segments": {}, "@class" : ".RegistrationRequest"};
       axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/RegistrationRequest', userCredentials)
-          .then(res => console.log(res.data));
-          this.setState({
-            UserName: '',
-            Email: '',
-            successfulLogin: true
+          .then(res => { 
+            console.log(res.data)
+            console.log(this.state.UserName)
+            console.log(res.data.userName)
+            console.log(this.state.Password)
+            console.log(res.data.password)
+            console.log(this.state.Email)
+            console.log(res.data.userId)
+
+            if (res.data.userId) {
+              this.state.UserId = res.data.userId;
+              this.setState({
+                UserName: '',
+                Email: '',
+                Password:'',
+                successfulLogin: true
+              });
+            }
           });
-          console.log('Registered successfully');
+      console.log('Registered successfully');
     }
   }
 
@@ -214,14 +253,15 @@ export default class AdminDialog extends React.Component{
                 onChange={this.onLoginOptionChange}
               />
             </Form.Group>
+            
             {this.state.logging === 'login' ? <div />:<Form.Field>
               <input type="email" value={this.state.Email} onChange={this.onEmailChange} placeholder="Email" />
             </Form.Field>}
             <Form.Field>
               <label>User Name</label>
-              <input type="text" value={this.state.UserName} onChange={this.onUserNameChange} placeholder="UserName" />
+              <input type="text" onChange={this.onUserNameChange} placeholder="UserName" />
               <label>Password</label>
-              <input type="password" value={this.state.Password} onChange={this.onPasswordChange} placeholder="Password" />
+              <input type="password"  onChange={this.onPasswordChange} placeholder="Password" />
             </Form.Field>
             <Button type="submit" onClick={this.onSubmit}>
               Submit

@@ -95,7 +95,7 @@ export default class AdminDialog extends React.Component{
   listTeams(e) {
     let tournamentData = {"@class": ".LogEventRequest", "eventKey": "ListTeamsInTournament", "tournamentId": this.state.Tournament};
     axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/LogEventRequest', tournamentData)
-      .then(res => { 
+      .then(res => {
         console.log(res.data);
         let teams = res.data.teams;
         this.state.tableData = [];
@@ -125,7 +125,7 @@ export default class AdminDialog extends React.Component{
     let teamData = {"@class": ".LogEventRequest", "eventKey": "AddTeamToTournament", "teamName": Name, "tournamentId" : this.state.Tournament, "pool":"A", "metaData": {"LogoPath": TeamLogoPath}};
     axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/LogEventRequest', teamData)
       .then(res => console.log(res.data));
-      
+
       this.setState({
         tableData,
         TeamNames,
@@ -166,6 +166,7 @@ export default class AdminDialog extends React.Component{
     e.preventDefault();
     console.log("Came into submit method")
     if(this.state.logging === "login") {
+      //TODO Remove
       /*let userCredentials = {UserName: this.state.UserName, Password: this.state.Password};
       axios.get('http://localhost:4000/strand/login/'+this.state.UserName, userCredentials)*/
       let userCredentials = {"userName": this.state.UserName, "password": this.state.Password, "@class" : ".AuthenticationRequest"};
@@ -186,14 +187,14 @@ export default class AdminDialog extends React.Component{
           .catch(function (error){
               console.log(error);
           });
-       
+
     } else {
       /*let userCredentials = {UserName: this.state.UserName, Email: this.state.Email};
       axios.post('http://localhost:4000/strand/login', userCredentials)*/
       console.log("came into else part")
       let userCredentials = {"userName": this.state.UserName, "displayName": "", "password": this.state.Password, "segments": {}, "@class" : ".RegistrationRequest"};
       axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/RegistrationRequest', userCredentials)
-          .then(res => { 
+          .then(res => {
             console.log(res.data)
             console.log(this.state.UserName)
             console.log(res.data.userName)
@@ -253,7 +254,7 @@ export default class AdminDialog extends React.Component{
                 onChange={this.onLoginOptionChange}
               />
             </Form.Group>
-            
+
             {this.state.logging === 'login' ? <div />:<Form.Field>
               <input type="email" value={this.state.Email} onChange={this.onEmailChange} placeholder="Email" />
             </Form.Field>}

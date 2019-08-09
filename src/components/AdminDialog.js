@@ -166,7 +166,6 @@ export default class AdminDialog extends React.Component{
     e.preventDefault();
     console.log("Came into submit method")
     if(this.state.logging === "login") {
-      //TODO Remove
       /*let userCredentials = {UserName: this.state.UserName, Password: this.state.Password};
       axios.get('http://localhost:4000/strand/login/'+this.state.UserName, userCredentials)*/
       let userCredentials = {"userName": this.state.UserName, "password": this.state.Password, "@class" : ".AuthenticationRequest"};

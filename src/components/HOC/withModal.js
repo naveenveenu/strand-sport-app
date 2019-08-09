@@ -1,10 +1,10 @@
 import React from 'react';
-import Modal from '../Modal/Modal';
+//import Modal from '../Modal/Modal';
 import { truncateSync } from 'fs';
-import {Image} from 'semantic-ui-react';
+import { Modal, Image} from 'semantic-ui-react';
 
 
-const withModal =(WrappedComponent) => {
+const withModal =(WrappedComponent, url) => {
     class _WithModal extends React.Component{
         state = {
             isOpen: false
@@ -24,12 +24,13 @@ const withModal =(WrappedComponent) => {
 
         render(){
             return(
-                <div onClick={(e) => {this.onShow(e)}}>
-                    <WrappedComponent {...this.props} />
-                    <Modal show={this.state.isOpen} onClose={this.onClose} >
-                        <WrappedComponent  {...this.props}/>
-                    </Modal>
-                </div>
+                // {/* <div onClick={(e) => {this.onShow(e)}}>
+                //     <WrappedComponent style={{ width:200, height:200}} {...this.props} />
+                //     <Modal show={this.state.isOpen} onClose={this.onClose} >
+                //         <WrappedComponent  {...this.props}/>
+                //     </Modal>
+                // </div> */}
+                <div></div>
             );
         }
     }

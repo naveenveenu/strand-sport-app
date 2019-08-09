@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Button, Tab, Form, Table, Checkbox,Icon, Image, Select, Segment} from 'semantic-ui-react';
+import { Container, Button, Tab, Form, Table, Image, Select, Segment} from 'semantic-ui-react';
 import axios from 'axios';
 
 export default class AdminDialog extends React.Component{
@@ -195,13 +195,6 @@ export default class AdminDialog extends React.Component{
       axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/RegistrationRequest', userCredentials)
           .then(res => { 
             console.log(res.data)
-            console.log(this.state.UserName)
-            console.log(res.data.userName)
-            console.log(this.state.Password)
-            console.log(res.data.password)
-            console.log(this.state.Email)
-            console.log(res.data.userId)
-
             if (res.data.userId) {
               this.state.UserId = res.data.userId;
               this.setState({

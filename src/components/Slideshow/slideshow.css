@@ -17,3 +17,11 @@
     float: left;
     width: 24.99999%;
   }
+
+  .modal {
+    left: unset !important;
+    right: unset !important;
+  }
+
+  .image{
+      padding:10px;  }

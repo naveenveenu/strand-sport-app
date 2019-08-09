@@ -1,27 +1,49 @@
 import React, {Component} from 'react';
 //import gallaryImg from ".././resources/logo.png";
 import Slideshow from '../components/Slideshow';
-import image1 from './Slideshow/GalleryPhotos/BadminionsTeam-2.JPG';
-import { Image} from 'semantic-ui-react';
+import image1 from './Slideshow/GalleryPhotos/Winners_2017-1.JPG';
+import image2 from './Slideshow/GalleryPhotos/Winners_2017-2.JPG';
+import image3 from './Slideshow/GalleryPhotos/Winners_2017-3.JPG';
+import image4 from './Slideshow/GalleryPhotos/Winners_2017-4.JPG';
+import image5 from './Slideshow/GalleryPhotos/Winners_2017-5.JPG';
+import image6 from './Slideshow/GalleryPhotos/Winners_2017-6.JPG';
+import image7 from './Slideshow/GalleryPhotos/RunnersUp_2017-1.JPG';
+import image8 from './Slideshow/GalleryPhotos/RunnersUp_2017-2.JPG';
+import image9 from './Slideshow/GalleryPhotos/BadminionsTeam-1.JPG';
+import image10 from './Slideshow/GalleryPhotos/BadminionsTeam-3.JPG';
+import image11 from './Slideshow/GalleryPhotos/BadminionsTeam-2.JPG';
+import {Modal, Image} from 'semantic-ui-react';
 
 export default class Gallery extends React.Component{
 
-  state = {
-    images:[
-      //{id:1, src: image1}, {id:2, src: image1},
-        {id:2, url:"https://picsum.photos/id/238/200/300"},
-       {id:3, url:"https://picsum.photos/id/239/200/300"},
-       {id:4, url:"https://picsum.photos/id/240/200/300"},
-       {id:5, url:"https://picsum.photos/id/241/200/300"},
-       {id:6, url:"https://picsum.photos/id/242/200/300"},
-       {id:7, url:"https://picsum.photos/id/243/200/300"},
-       {id:8, url:"https://picsum.photos/id/244/200/300"},
-    ]
+  constructor(props) {
+    super(props);
+    this.state= {
+      images:[
+        {id:1, src: image1}, {id:2, src: image2}, {id:3, src: image3}, {id:4, src: image4}, 
+        {id:5, src: image5}, {id:6, src: image6}, {id:7, src: image7}, {id:8, src: image8}, 
+        {id:9, src: image9}, {id:10, src: image10}, {id:11, src: image11}, 
+      ]
+    }
   }
 
   render(){
+   /*  let imag = this.props.slides.map((slide) => {
+      return <Image key={slide.id} url = {slide.src} />
+    });
+ */
+console.log(this.state);
     return(
-        <Slideshow slides = {this.state.images} />
+        //<Slideshow slides = {this.state.images} />
+        <div>
+          {this.state.images.map(function(ind, key){
+            return (<Modal trigger={<Image src= {ind.src} size='tiny'/>}>
+            <Modal.Content image>
+              <Image wrapped src={ind.src} />
+            </Modal.Content>
+          </Modal>);
+          })}
+        </div>
     )
   }
 }

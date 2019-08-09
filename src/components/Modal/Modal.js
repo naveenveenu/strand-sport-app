@@ -1,31 +1,40 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import { relative } from 'path';
+import { Icon } from 'semantic-ui-react';
 
 const backdropStyle={
     position: 'fixed',
     top: '0',
     bottom: '0',
-    left:'0',
     right:'0',
-    backgroundColor: 'rgb(255, 255, 255, 0.1)',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
     padding: 50
 };
 
 const modalStyle={
     backgroundColor: '#fff',
-    borderRadius: 5,
-    maxWidth: 500,
+    borderRadius: 10,
+    maxWidth: 600,
     minHeight: 300,
-    margin: '0, auto',
-    padding: 30,
-    position: 'relative'
+    padding: 10,
+    position: 'relative',
+    marginLeft: 250
 };
 
 const footerStyle= {
-    position: 'absolute',
-    bottom:20
+    position: 'relative',
+    bottom: '0'
 };
+
+const closeButton ={
+    position: 'relative',
+    backgroundColor: 'rgb(255,0,0)',
+    marginTop : 200,
+    marginLeft : 700
+}
+
 
 
 export default class Modal extends React.Component{
@@ -46,12 +55,12 @@ export default class Modal extends React.Component{
         }
         return(
         <div style={backdropStyle}>
-            <div style={modalStyle}>
+            <div style={modalStyle} closeIcon>
                 {this.props.children}
                 <div style={footerStyle}>
-                    <button onClick={(e) => { this.onClose(e)}}>
+                    <button style={closeButton} onClick={(e) => { this.onClose(e)}}>
                         Close
-                    </button>
+                    </button> 
                 </div>
             </div>
         </div>

@@ -7,15 +7,15 @@ import { Image, Card} from 'semantic-ui-react';
 
 export default class Slideshow extends React.Component{
     render(){
-        let SlideWithModal = withModal(Slide);
-        let slides = this.props.slides.map((slide) => {
-            return <SlideWithModal key={slide.id} url = {slide.url} />
+        // let SlideWithModal = withModal(Slide);
+            let slides = this.props.slides.map((slide) => {
+            return <Slide key={slide.id} url = {slide.src} />
         })
+        console.log(this.props.slides)
         return(
             <div className="slide-container">
-                <Card.Group itemsPerRow={4}>
-                    <Card color='red'>{slides}</Card>
-                </Card.Group>     
+                {slides}
+               {/* <Card color='red'>{slides}</Card> */}
             </div>
         )         
     }

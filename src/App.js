@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
+import {Component} from 'react';
 import {Dropdown, Menu, Container} from 'semantic-ui-react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 // import { Navbar, Nav, NavDropdown, Form, FormControl } from 'react-bootstrap';
@@ -98,7 +99,6 @@ class App extends Component {
             <Menu.Item><Link id="admin" onClick={this.selected} to="/login">Admin</Link></Menu.Item>
           </Menu.Menu>
         </Menu> 
-        
         {this.loadComponent()}
       </Router>
       </Container>

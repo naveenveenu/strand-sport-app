@@ -59,46 +59,46 @@ class App extends Component {
       return <Rules />
     if(this.state.item === 'admin')
       return <Route path="/login" exact component={AdminDialog} />;
-    return <Home />
+    return <div> This is Home Page </div>
   }
 
   render() {
     const { activeItem } = this.state
     return (
-      <Container fluid> 
+      <Container fluid>
       <Router>
         <Menu size='large'>
         <Menu.Item onClick={this.selected} size="big"><img src={logo}/></Menu.Item>
           <Menu.Menu position='right'>
             <Menu.Item id="home" onClick={this.selected} name='home' active={activeItem === 'home'} />
-            
+
             <Menu.Item href="#fixtures" id="fixtures" onClick={this.selected} name='Fixtures'active={activeItem === 'messages'} />
-            
+
             <Dropdown item text='Standings' onClick={this.selectedItem} id="standings">
               <Dropdown.Menu>
                 <Dropdown.Item  id="standings_2017">2017</Dropdown.Item>
                 <Dropdown.Item  id="standings_2019">2019</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
-            
+
             <Dropdown item text='Teams' onClick={this.selectedItem} id="teams">
               <Dropdown.Menu>
                 <Dropdown.Item  id="teams_2017">2017</Dropdown.Item>
                 <Dropdown.Item  id="teams_2019">2019</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
-            
+
             <Dropdown item text='Gallary' onClick={this.selectedItem} id="gallary">
               <Dropdown.Menu>
                 <Dropdown.Item id="gallery_2017">2017</Dropdown.Item>
                 <Dropdown.Item id="gallery_2019">2019</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
-            
+
             <Menu.Item href="#rules" name='Rules' id="rules" active={activeItem === 'rules'} />
-            <Menu.Item><Link id="admin" onClick={this.selected} to="/login">Admin</Link></Menu.Item>
+            {this.props.showAdmin?<Menu.Item><Link id="admin" onClick={this.selected} to="/login">Admin</Link></Menu.Item>:<div />}
           </Menu.Menu>
-        </Menu> 
+        </Menu>
         {this.loadComponent()}
       </Router>
       </Container>

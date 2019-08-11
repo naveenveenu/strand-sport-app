@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import App from './components/Home';
 
 // import AppSlideShow from './components/Gallery';
 // import AppSlideShow from './AppSlideShow';

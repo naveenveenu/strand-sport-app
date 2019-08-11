@@ -31,9 +31,6 @@ export default class AdminDialog extends React.Component{
     this.onPasswordChange = this.onPasswordChange.bind(this);
     this.onEmailChange = this.onEmailChange.bind(this);
     this.onLoginOptionChange = this.onLoginOptionChange.bind(this);
-    this.loadComponent = this.loadComponent.bind(this);
-    this.EntryForm = this.EntryForm.bind(this);
-    this.loginForm = this.loginForm.bind(this);
     this.prevent = this.prevent.bind(this);
     this.handleChangeTeams = this.handleChangeTeams.bind(this);
     this.handleChangePlayers = this.handleChangePlayers.bind(this);
@@ -227,42 +224,6 @@ export default class AdminDialog extends React.Component{
     });
   }
 
-
-  loginForm() {
-      return(
-        <Segment inverted color='teal'>
-          <Form inverted>
-            <Form.Group inline>
-              <Form.Radio
-                label='Login'
-                value='login'
-                checked={this.state.logging === 'login'}
-                onChange={this.onLoginOptionChange}
-              />
-              <Form.Radio
-                label='Register'
-                value='register'
-                checked={this.state.logging === 'register'}
-                onChange={this.onLoginOptionChange}
-              />
-            </Form.Group>
-
-            {this.state.logging === 'login' ? <div />:<Form.Field>
-              <input type="email" value={this.state.Email} onChange={this.onEmailChange} placeholder="Email" />
-            </Form.Field>}
-            <Form.Field>
-              <label>User Name</label>
-              <input type="text" onChange={this.onUserNameChange} placeholder="UserName" />
-              <label>Password</label>
-              <input type="password"  onChange={this.onPasswordChange} placeholder="Password" />
-            </Form.Field>
-            <Button type="submit" onClick={this.onSubmit}>
-              Submit
-            </Button>
-          </Form>
-      </Segment>
-      );
-  }
   prevent(e) {
     e.preventDefault();
   }
@@ -383,21 +344,13 @@ this.setState({
   panes,
 })
   }
-  EntryForm(){
-    return (    <Tab menu={{ secondary: true, pointing: true }} panes={this.state.panes} />        );
-  }
 
-  loadComponent(){
-    return (this.state.successfulLogin? this.EntryForm(): this.loginForm());
-  }
 
   render(){
     return(
       <Container style={{marginTop:'10px' }} >
-        {this.loadComponent()}
-
+        <Tab menu={{ secondary: true, pointing: true }} panes={this.state.panes} />
       </Container>
-
     );
   }
 }

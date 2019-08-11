@@ -12,15 +12,17 @@ export default class Fixtures extends React.Component{
       b : [],
     }
   }
+
   componentWillMount(){
     {
       this.setState({
       a: [teamSrc, teamSrc, teamSrc, teamSrc, teamSrc],
       b: [teamSrc, teamSrc, teamSrc, teamSrc],
       });
-      
+
     }
   }
+
   render(){
     return(
      <div>
@@ -33,14 +35,14 @@ export default class Fixtures extends React.Component{
             <Card.Header bold >Naveen</Card.Header>
             <Card.Header bold >Naveen</Card.Header>
             </Card.Content>
-            
+
             <Card.Description>
               Steve wants to add you to the group <strong>best friends</strong>
             </Card.Description>
           </Card.Content>
         </Card>
        </Card.Group>
-        
+
      </div>
     );
   }

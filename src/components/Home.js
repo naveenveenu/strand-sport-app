@@ -1,7 +1,6 @@
 import React from 'react';
-import {Image} from 'semantic-ui-react'
-import logo from '.././resources/strandLogo.png'; 
-
+import axios from 'axios';
+import App from '../App';
 
 const columnStyle = {
  maxWidth: 450,
@@ -11,9 +10,63 @@ const columnStyle = {
 
 
 export default class Home extends React.Component{
+
+  constructor(props) {
+    super(props);
+    this.state= {
+      UserName: '',
+      Password: '',
+      successfulLogin: false,
+      adminLoginSuccess: false,
+    };
+    this.loginTo = this.loginTo.bind(this);
+    this.onUserNameChange = this.onUserNameChange.bind(this);
+    this.onPasswordChange = this.onPasswordChange.bind(this);
+  }
+
+  loginTo(e) {
+      console.log('login....');
+      let userCredentials = {"userName": this.state.UserName, "password": this.state.Password, "@class" : ".AuthenticationRequest"};
+      axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/AuthenticationRequest', userCredentials)
+          .then(res => {
+            console.log(res.data);
+            console.log(res.data.userId)
+            if (res.data.userId) {
+              console.log('login successful');
+              this.state.UserId = res.data.userId;
+              var adminLoginSuccess = false;
+              if(this.state.UserName === "naveen" && this.state.Password === "naveen123") {
+                adminLoginSuccess = true;
+              }
+              this.setState({
+                successfulLogin: true,
+                adminLoginSuccess,
+              });
+            }else{
+              console.log("Login Not Successful")
+            }
+          })
+          .catch(function (error){
+              console.log(error);
+          });
+  }
+
+  onUserNameChange(e) {
+    this.setState({
+      UserName: e.target.value,
+    });
+  }
+
+  onPasswordChange(e) {
+    this.setState({
+      Password: e.target.value,
+    });
+  }
+
   render(){
     return(
-      <div class ="ui middle aligned center aligned grid">
+      <div>
+        {this.state.successfulLogin? <App showAdmin={this.state.adminLoginSuccess} />:  <div class ="ui middle aligned center aligned grid">
         <div class="column" style={columnStyle}>
           <h2 class="ui teal header">
             <div class="content">
@@ -25,59 +78,23 @@ export default class Home extends React.Component{
               <div class="field">
                 <div class="ui left icon input">
                   <i class="user icon"/>
-                  <input type="text" name="userName" placeholder="User Name"></input>
+                  <input type="text" name="userName" onChange={this.state.onUserNameChange} ></input>
                 </div>
               </div>
 
               <div class="field">
                 <div class="ui left icon input">
                   <i class="lock icon"/>
-                  <input type="password" name="password" placeholder="Password"></input>
+                  <input type="password" name="password" onChange={this.state.onPasswordChange} ></input>
                 </div>
               </div>
-              <div class="ui fluid large teal submit button">Login</div>
+              <div class="ui fluid large teal submit button" onClick={this.loginTo}>Login</div>
             </div>
             <div class="ui error message"></div>
           </form>
         </div>
+      </div>}
       </div>
-
-/* 
-      <div class="ui middle aligned center aligned grid">
-        <div class="column">
-          <h2 class="ui teal image header">
-            <img src={logo} class="image">
-            <div class="content">
-              Log-in to your account
-            </div>
-          </h2>
-        </div>
-       </div> 
-       </div>
-         <form class="ui large form">
-            <div class="ui stacked segment">
-              <div class="field">
-                <div class="ui left icon input">
-                  <i class="user icon"></i>
-                  <input type="text" name="email" placeholder="E-mail address">
-                </div>
-              </div>
-              <div class="field">
-                <div class="ui left icon input">
-                  <i class="lock icon"></i>
-                  <input type="password" name="password" placeholder="Password">
-                </div>
-              </div>
-            <div class="ui fluid large teal submit button">Login</div>
-          </div>
-        <div class="ui error message"></div>
-      </form>
-
-    <div class="ui message">
-      New to us? <a href="#">Sign Up</a>
-    </div>
-  </div>
-</div> */
     );
   }
 }

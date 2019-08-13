@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card, Image} from 'semantic-ui-react';
+import {Card, Image, Segment, Grid, Divider} from 'semantic-ui-react';
 
 import teamSrc from ".././resources/badmintonLogo.jpg";
 
@@ -10,6 +10,7 @@ export default class Fixtures extends React.Component{
     this.state = {
       a : [],
       b : [],
+      playersJson: {},
     }
   }
 
@@ -21,29 +22,52 @@ export default class Fixtures extends React.Component{
       });
 
     }
+    var expectedJson = [
+      {
+        "Name": "Team1",
+        players: [{
+          "Name": "Player1",
+          "ProfilePic": ""
+        }]
+      },{
+        "Name": "Team2",
+        players: [{
+          "Name": "Player1",
+          "ProfilePic": ""
+
+        }]
+      },
+    ];
+    console.log("Keyssss", Object.keys(expectedJson));
+    this.setState({
+      playersJson: expectedJson,
+    })
   }
 
   render(){
     return(
-     <div>
-       <Card.Group>
-       <Card fluid color='red'>
-          <Card.Content textAlign='center'>
-            <Image size='small' src={teamSrc} floated='left' />
+       <Segment placeholder>
+        <Grid columns={2} relaxed='very' stackable>
+          <Grid.Column>
+              <Image size='small' src={teamSrc} floated='left' />
+              <h1>Team1</h1>
+              {this.state.playersJson[0].players.map(function(key, ind){
+                return <li>{key.Name}</li>
+              }) }
+
+          </Grid.Column>
+
+          <Grid.Column verticalAlign='middle'>
             <Image size='small' src={teamSrc} floated='right'/>
-            <Card.Content textAlign='center' >
-            <Card.Header bold >Naveen</Card.Header>
-            <Card.Header bold >Naveen</Card.Header>
-            </Card.Content>
+            <h1>Team2</h1>
+            {this.state.playersJson[1].players.map(function(key, ind){
+              return <li>{key.Name}</li>
+            }) }
+          </Grid.Column>
+        </Grid>
 
-            <Card.Description>
-              Steve wants to add you to the group <strong>best friends</strong>
-            </Card.Description>
-          </Card.Content>
-        </Card>
-       </Card.Group>
-
-     </div>
+        <Divider vertical>V/S</Divider>
+      </Segment>
     );
   }
 }

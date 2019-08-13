@@ -16,8 +16,8 @@ export default class Home extends React.Component{
     this.state= {
       UserName: '',
       Password: '',
-      successfulLogin: false,
-      adminLoginSuccess: false,
+      successfulLogin: true,
+      adminLoginSuccess: true,
     };
     this.loginTo = this.loginTo.bind(this);
     this.onUserNameChange = this.onUserNameChange.bind(this);

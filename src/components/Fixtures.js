@@ -22,7 +22,7 @@ export default class Fixtures extends React.Component{
       });
 
     }
-    var expectedJson = [
+    var segment = [
       {
         "Name": "Team1",
         players: [{
@@ -38,7 +38,10 @@ export default class Fixtures extends React.Component{
         }]
       },
     ];
-    console.log("Keyssss", Object.keys(expectedJson));
+    var expectedJson = [
+      segment, segment, segment, segment
+    ];
+
     this.setState({
       playersJson: expectedJson,
     })
@@ -46,28 +49,32 @@ export default class Fixtures extends React.Component{
 
   render(){
     return(
-       <Segment placeholder>
-        <Grid columns={2} relaxed='very' stackable>
-          <Grid.Column>
-              <Image size='small' src={teamSrc} floated='left' />
-              <h1>Team1</h1>
-              {this.state.playersJson[0].players.map(function(key, ind){
-                return <li>{key.Name}</li>
-              }) }
+      <div>
+        {this.state.playersJson.map(function(key, index){
+          return <Segment placeholder>
+           <Grid columns={2} relaxed='very' stackable>
+             <Grid.Column>
+                 <Image size='small' src={teamSrc} floated='left' />
+                 <h1>{key[0].Name}</h1>
+                 {key[0].players.map(function(key, ind){
+                   return <li>{key.Name}</li>
+                 }) }
 
-          </Grid.Column>
+             </Grid.Column>
 
-          <Grid.Column verticalAlign='middle'>
-            <Image size='small' src={teamSrc} floated='right'/>
-            <h1>Team2</h1>
-            {this.state.playersJson[1].players.map(function(key, ind){
-              return <li>{key.Name}</li>
-            }) }
-          </Grid.Column>
-        </Grid>
+             <Grid.Column verticalAlign='middle'>
+               <Image size='small' src={teamSrc} floated='right'/>
+               <h1>{key[1].Name}</h1>
+               {key[1].players.map(function(key, ind){
+                 return <li>{key.Name}</li>
+               }) }
+             </Grid.Column>
+           </Grid>
 
-        <Divider vertical>V/S</Divider>
-      </Segment>
+           <Divider vertical>V/S</Divider>
+         </Segment>
+        })}
+       </div>
     );
   }
 }

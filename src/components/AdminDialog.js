@@ -119,6 +119,7 @@ export default class AdminDialog extends React.Component{
   }
 
   addTeam(e) {
+    console.log("User ID", this.props.userId); //Pass this value to the required component
     e.preventDefault();
     let tableData = this.state.tableData;
     let TeamNames = this.state.TeamNames;

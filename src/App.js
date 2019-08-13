@@ -58,7 +58,7 @@ class App extends Component {
     if(this.state.item === 'rules')
       return <Rules />
     if(this.state.item === 'admin')
-      return <Route path="/login" exact component={AdminDialog} />;
+      return <AdminDialog userId={this.props.UserId} />;
     return <div> This is Home Page </div>
   }
 

@@ -16,8 +16,9 @@ export default class Home extends React.Component{
     this.state= {
       UserName: '',
       Password: '',
-      successfulLogin: false,
-      adminLoginSuccess: false,
+      successfulLogin: true,
+      adminLoginSuccess: true,
+      userId: '',//Set it wherever you need by this.setState
     };
     this.loginTo = this.loginTo.bind(this);
     this.onUserNameChange = this.onUserNameChange.bind(this);
@@ -66,7 +67,7 @@ export default class Home extends React.Component{
   render(){
     return(
       <div>
-        {this.state.successfulLogin? <App showAdmin={this.state.adminLoginSuccess} />:  <div class ="ui middle aligned center aligned grid">
+        {this.state.successfulLogin? <App UserId={this.state.userId} showAdmin={this.state.adminLoginSuccess} />:  <div class ="ui middle aligned center aligned grid">
         <div class="column" style={columnStyle}>
           <h2 class="ui teal header">
             <div class="content">

@@ -71,15 +71,34 @@ export default class AdminDialog extends React.Component{
 
   addPlayer(e) {
     e.preventDefault();
-    console.log("Adding Player", document.getElementById("teams").selected, document.getElementById("teams").value);
+    console.log("Adding Player", document.getElementById("team").selected, document.getElementById("team").value);
     let playersData = this.state.playersData;
-    let Name = document.getElementById('Name').value;
+    let playerNames = document.getElementById('Name').value;
+    console.log(this.state.TeamNames)
+    let TeamName = document.getElementById("team").text;
+    
+    console.log(playerNames)
+    console.log(TeamName)
 
     playersData.push({
-      Name,
-      TeamName: document.getElementById("teams").value,
+      playerNames,
+      TeamName,
       Photo: document.getElementById('filePath').value,
     });
+
+    let playerData = {"@class": ".LogEventRequest", 
+                    "eventKey": "AddPlayerToTournamentTeam", 
+                    "teamName": TeamName, 
+                    "players": [playerNames], 
+                    "tournamentId" : this.state.Tournament};
+
+    axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/LogEventRequest', playerData)
+      .then(res => console.log(res.data));
+
+      this.setState({
+        playersData,
+        file: null,
+      })
 
     document.getElementById('Name').value = '';
     document.getElementById('filePath').value = '';
@@ -107,8 +126,10 @@ export default class AdminDialog extends React.Component{
 
   addTeam(e) {
     e.preventDefault();
+    console.log("User ID", this.props.userId);
     let tableData = this.state.tableData;
     let TeamNames = this.state.TeamNames;
+    console.log(this.state.UserId)
 
     let Name = document.getElementById('Name').value;
     TeamNames.push({text:Name, key: Name, value: Name});
@@ -172,6 +193,7 @@ export default class AdminDialog extends React.Component{
             console.log(res.data.userId)
             if (res.data.userId) {
               console.log('login successful');
+              console.log(this.props.state.UserId);
               this.state.UserId = res.data.userId;
               this.setState({
                 successfulLogin: true
@@ -275,6 +297,9 @@ export default class AdminDialog extends React.Component{
     </Table.Body>
   </Table></div>);
   }
+
+
+
   getPlayersTab(){
     return (<div>
       <Form>

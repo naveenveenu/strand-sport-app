@@ -14,10 +14,10 @@ export default class Home extends React.Component{
   constructor(props) {
     super(props);
     this.state= {
-      UserName: '',
-      Password: '',
+      UserName: 'naveen',
+      Password: 'naveen',
       successfulLogin: false,
-      adminLoginSuccess: false,
+      adminLoginSuccess: false
     };
     this.loginTo = this.loginTo.bind(this);
     this.onUserNameChange = this.onUserNameChange.bind(this);
@@ -35,7 +35,7 @@ export default class Home extends React.Component{
               console.log('login successful');
               this.state.UserId = res.data.userId;
               var adminLoginSuccess = false;
-              if(this.state.UserName === "naveen" && this.state.Password === "naveen123") {
+              if(res.data.scriptData && res.data.scriptData.isAdmin){
                 adminLoginSuccess = true;
               }
               this.setState({

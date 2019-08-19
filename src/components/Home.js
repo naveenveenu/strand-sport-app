@@ -17,7 +17,9 @@ export default class Home extends React.Component{
       UserName: 'naveen',
       Password: 'naveen',
       successfulLogin: false,
-      adminLoginSuccess: false
+      adminLoginSuccess: false,
+      userId: '',//Set it wherever you need by this.setState
+      tournamentId: '',
     };
     this.loginTo = this.loginTo.bind(this);
     this.onUserNameChange = this.onUserNameChange.bind(this);
@@ -33,7 +35,13 @@ export default class Home extends React.Component{
             console.log(res.data.userId)
             if (res.data.userId) {
               console.log('login successful');
-              this.state.UserId = res.data.userId;
+             // this.state.UserId = res.data.userId;
+              
+              //this.props.userId = res.data.userId;
+              this.setState({
+                userId : res.data.userId,
+                tournamentId : '5d3d3ad413e61004e5c0ffc8-1564298778175',
+              })
               var adminLoginSuccess = false;
               if(res.data.scriptData && res.data.scriptData.isAdmin){
                 adminLoginSuccess = true;
@@ -66,10 +74,10 @@ export default class Home extends React.Component{
   render(){
     return(
       <div>
-        {this.state.successfulLogin? <App showAdmin={this.state.adminLoginSuccess} />:  <div class ="ui middle aligned center aligned grid">
+        {this.state.successfulLogin? <App UserId={this.state.userId} TournamentId = {this.state.tournamentId} showAdmin={this.state.adminLoginSuccess} />:  <div class ="ui middle aligned center aligned grid">
         <div class="column" style={columnStyle}>
           <h2 class="ui teal header">
-            <div class="content">
+            <div className="content">
                 Please Log-in here
             </div>
           </h2>

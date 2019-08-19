@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Button, Tab, Form, Table, Image, Select, Segment} from 'semantic-ui-react';
+import { Container, Button, Tab, Form, Table, Image, Select, Segment, Card} from 'semantic-ui-react';
 import axios from 'axios';
 
 export default class AdminDialog extends React.Component{
@@ -18,10 +18,23 @@ export default class AdminDialog extends React.Component{
       file: null,
       tableData: [],
       TeamNames: [],
+      fixturesNames: [{
+          text:'MD', key: 'MD', value: 'MD'
+      },{
+        text:'WD', key: 'WD', value: 'WD'
+      },{
+        text:'MixD', key: 'MixD', value: 'MixD'
+      },{
+        text:'Single', key: 'Single', value: 'Single'
+      }
+    ],
       playersData: [],
       Tournament: '5d3d3ad413e61004e5c0ffc8-1564298778175',
       UserId: null
     };
+    this.selectTFixture = this.selectTFixture.bind(this);
+    this.selectPlayers = this.selectPlayers.bind(this);
+    this.selectFixture = this.selectFixture.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.removeTeam = this.removeTeam.bind(this);
     this.removePlayer = this.removePlayer.bind(this);
@@ -125,6 +138,7 @@ export default class AdminDialog extends React.Component{
   }
 
   addTeam(e) {
+    console.log("User ID", this.props.userId); //Pass this value to the required component
     e.preventDefault();
     console.log("User ID", this.props.userId);
     let tableData = this.state.tableData;
@@ -352,8 +366,93 @@ export default class AdminDialog extends React.Component{
     </Table.Body>
   </Table></div>)
   }
+
+  selectFixture(e, key) {
+    console.log('which fixture', key.value);
+    this.setState({
+      selectedFixture:key.value,
+    });
+  }
+
+  selectTFixture(e, key, selectedFixture) {
+    let playersData = this.state.playersData;
+    let ar = [];
+    for(let player of playersData) {
+      console.log(key.value, player);
+      if(key.value === player.TeamName) {
+        ar.push({
+          key: player.Name,
+          value: player.Name,
+          text: player.Name,
+        });
+      }
+    }
+    if(selectedFixture === "fixtureTeam1") {
+
+      this.setState({
+        mixPlayers1:ar,
+      });
+    }else {
+      this.setState({
+        mixPlayers2: ar,
+      });
+    }
+    console.log('which fixture',e, key.value);
+  }
+
+  getFixtureTypes(ftype){
+    return <Select placeholder='Select Play' id={"fixture"+ftype} onChange={this.selectFixture} options={this.state.fixturesNames} />
+  }
+
+  selectPlayers(ftype){
+    return <div><Select placeholder='Select Player' multiple options={this.state.mixPlayers1} /><Select placeholder='Select Player' multiple options={this.state.mixPlayers2} /></div>
+  }
+
   getFixturesTab(){
-    return <h1> Adding Fixtures</h1>
+    return <div>
+      <div>
+        <Select placeholder='Select Team' id={"teamA"} onChange={(e, key) => this.selectTFixture(e, key, "fixtureTeam1")} options={this.state.TeamNames} />
+        {'  V/S  '}
+        <Select placeholder='Select Team' id={"teamB"} onChange={(e, key) => this.selectTFixture(e, key, "fixtureTeam2")} options={this.state.TeamNames} />
+      </div>
+    <Card.Group>
+      <Card  color='red'  >
+        <Card.Content>
+          <Card.Header>TeamA vs TeamB</Card.Header>
+          <Card.Meta>Play1</Card.Meta>
+          <Card.Description>
+            {this.getFixtureTypes('first')}
+            {this.selectPlayers()}
+          </Card.Description>
+        </Card.Content>
+      </Card>
+
+      <Card  color='orange'  >
+        <Card.Content>
+          <Card.Header>TeamA vs TeamB</Card.Header>
+          <Card.Meta>Play2</Card.Meta>
+          <Card.Description>{this.getFixtureTypes('second')}{this.selectPlayers()}</Card.Description>
+
+        </Card.Content>
+      </Card>
+
+      <Card  color='yellow'  >
+        <Card.Content>
+          <Card.Header>TeamA vs TeamB</Card.Header>
+          <Card.Meta>Play2</Card.Meta>
+          <Card.Description>{this.getFixtureTypes('third')}{this.selectPlayers()}</Card.Description>
+        </Card.Content>
+      </Card>
+
+      <Card  color='green'  >
+        <Card.Content>
+          <Card.Header>TeamA vs TeamB</Card.Header>
+          <Card.Meta>Play2</Card.Meta>
+          <Card.Description>{this.getFixtureTypes('fourth')}{this.selectPlayers()}</Card.Description>
+        </Card.Content>
+      </Card>
+  </Card.Group>
+  </div>
   }
   updateScoresTab(){
     return(<div/>)

@@ -11,6 +11,7 @@ export default class AdminDialog extends React.Component{
       Email: 'example@google.com',
       logging: 'login',
       successfulLogin: false,
+      selectedTeam: '',
       NoOfTeams: 1,
       NoOfPlayers: 1,
       open: false,
@@ -29,8 +30,8 @@ export default class AdminDialog extends React.Component{
       }
     ],
       playersData: [],
-      Tournament: '5d3d3ad413e61004e5c0ffc8-1564298778175',
-      UserId: null
+      Tournament: this.props.tournamentId,
+      UserId: this.props.userId,
     };
     this.selectTFixture = this.selectTFixture.bind(this);
     this.selectPlayers = this.selectPlayers.bind(this);
@@ -52,8 +53,19 @@ export default class AdminDialog extends React.Component{
     this.updateScoresTab = this.updateScoresTab.bind(this);
     this.getFixturesTab = this.getFixturesTab.bind(this);
     this.listTeams = this.listTeams.bind(this);
+    this.selectedTeam = this.selectedTeam.bind(this);
+
+    this.listTeams();
   }
 
+  selectedTeam(e, data) {
+    console.log(e);
+    this.setState({
+      selectedTeam: data.text,
+    })
+
+    console.log(data)
+  }
   fileInputRef = React.createRef();
   fileChange = e => {
     this.setState({ file: URL.createObjectURL(e.target.files[0]) }, () => {
@@ -82,92 +94,173 @@ export default class AdminDialog extends React.Component{
     });
   }
 
-  addPlayer(e) {
-    e.preventDefault();
-    console.log("Adding Player", document.getElementById("team").selected, document.getElementById("team").value);
-    let playersData = this.state.playersData;
-    let playerNames = document.getElementById('Name').value;
-    console.log(this.state.TeamNames)
-    let TeamName = document.getElementById("team").text;
+  // addPlayer(e) {
+  //   e.preventDefault();
+  //   console.log("Adding Player", document.getElementById("team").selected, document.getElementById("team").value);
+  //   let playersData = this.state.playersData;
+  //   let playerNames = document.getElementById('Name').value;
+  //   console.log(this.state.TeamNames)
+  //   let TeamName = document.getElementById("team").text;
     
-    console.log(playerNames)
-    console.log(TeamName)
+  //   console.log(playerNames)
+  //   console.log(TeamName)
 
-    playersData.push({
-      playerNames,
-      TeamName,
-      Photo: document.getElementById('filePath').value,
-    });
+  //   playersData.push({
+  //     playerNames,
+  //     TeamName,
+  //     Photo: document.getElementById('filePath').value,
+  //   });
 
-    let playerData = {"@class": ".LogEventRequest", 
-                    "eventKey": "AddPlayerToTournamentTeam", 
-                    "teamName": TeamName, 
-                    "players": [playerNames], 
-                    "tournamentId" : this.state.Tournament};
+  //   let playerData = {"@class": ".LogEventRequest", 
+  //                   "eventKey": "AddPlayerToTournamentTeam", 
+  //                   "teamName": TeamName, 
+  //                   "players": [playerNames], 
+  //                   "tournamentId" : this.state.Tournament};
 
-    axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/LogEventRequest', playerData)
-      .then(res => console.log(res.data));
+  //   axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/LogEventRequest', playerData)
+  //     .then(res => console.log(res.data));
 
-      this.setState({
-        playersData,
-        file: null,
-      })
+  //     this.setState({
+  //       playersData,
+  //       file: null,
+  //     })
 
-    document.getElementById('Name').value = '';
-    document.getElementById('filePath').value = '';
-    document.getElementById('filePath').innerHTML = '';
-    this.setState({
-      playersData,
-    })
-  }
+  //   document.getElementById('Name').value = '';
+  //   document.getElementById('filePath').value = '';
+  //   document.getElementById('filePath').innerHTML = '';
+  //   this.setState({
+  //     playersData,
+  //   })
+  // }
 
   listTeams(e) {
-    let tournamentData = {"@class": ".LogEventRequest", "eventKey": "ListTeamsInTournament", "tournamentId": this.state.Tournament};
+    let tournamentData = {"@class": ".LogEventRequest", "eventKey": "ListTeamsInTournament", "tournamentId": this.state.Tournament, "playerId":this.state.UserId};
     axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/LogEventRequest', tournamentData)
       .then(res => {
         console.log(res.data);
-        let teams = res.data.teams;
-        this.state.tableData = [];
-        teams.forEach(team => {
-          this.state.tableData.push({
-            Name: team.teamName,
-            Logo: team.metaData.LogoPath
-          });
-        });
+        let teams = res.data.scriptData.teams;
+        this.updateTeams(teams);
       });
   }
 
   addTeam(e) {
     console.log("User ID", this.props.userId); //Pass this value to the required component
+    console.log("tournament ID", this.props.tournamentId)
     e.preventDefault();
-    console.log("User ID", this.props.userId);
+    console.log("User ID", this.state.UserId);
     let tableData = this.state.tableData;
     let TeamNames = this.state.TeamNames;
     console.log(this.state.UserId)
 
     let Name = document.getElementById('Name').value;
-    TeamNames.push({text:Name, key: Name, value: Name});
     let TeamLogoPath = document.getElementById('filePath').value;
+    let teamNameExists = false;
+   
+    if (Name) {
+      TeamNames.forEach(teamName => {
+        if(teamName.text == Name){
+          teamNameExists = true;
+        }
+      });
 
-    tableData.push({
-      Name: Name,
-      Logo: TeamLogoPath,
-    });
+      if (!teamNameExists){
+        this.addTeamInServer(Name, TeamLogoPath)
+      }
+    }
+    document.getElementById('Name').value = '';
+    document.getElementById('filePath').value = '';
+    document.getElementById('filePath').innerHTML = '';
+  }
 
-    let teamData = {"@class": ".LogEventRequest", "eventKey": "AddTeamToTournament", "teamName": Name, "tournamentId" : this.state.Tournament, "pool":"A", "metaData": {"LogoPath": TeamLogoPath}};
-    axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/LogEventRequest', teamData)
-      .then(res => console.log(res.data));
+  addPlayer(e) {
+    e.preventDefault();
+    console.log("Adding Player", document.getElementById("team").selected, document.getElementById("team").value);
+    let playersData = this.state.playersData;
+    let playerName = document.getElementById('Name').value;
+    let TeamName = this.state.selectedTeam;
+    let playerExists = false;
+    console.log(playerName)
+    console.log(TeamName)
 
-      this.setState({
-        tableData,
-        TeamNames,
-        file: null,
-      })
-    console.log('Registered successfully');
+    if(playerName){
+      playersData.forEach(player => {
+        if(player.text == playerName){
+          playerExists = true;
+        }
+      });
+
+      if(!playerExists){
+        this.addPlayerInServer(playerName, TeamName)
+      }
+
+    }
 
     document.getElementById('Name').value = '';
     document.getElementById('filePath').value = '';
     document.getElementById('filePath').innerHTML = '';
+    
+  }
+
+  addPlayerInServer(playerName, TeamName){
+    let playerData = {"@class": ".LogEventRequest", 
+                    "eventKey": "AddPlayerToTournamentTeam", 
+                    "teamName": TeamName, 
+                    "players": [playerName], 
+                    "tournamentId" : this.state.Tournament,
+                    "playerId":this.state.UserId};
+
+    axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/LogEventRequest', playerData)
+      .then(res => {
+        console.log(res.data)
+        if(res.data.scriptData.Response == "Success"){
+          this.updatePlayers(res.data.scriptData.validPlayers)
+          console.log('Player added successfully');
+        }
+      });
+  }
+
+  updatePlayers(playerNames){
+    if(playerNames && playerNames.length > 0){
+      playerNames.forEach(playerName => {
+        this.state.playersData.push ({text: playerName});
+      });
+    }
+  }
+
+  addTeamInServer(Name, TeamLogoPath){
+    let teamData = {"@class": ".LogEventRequest", "eventKey": "AddTeamToTournament", "teamName": Name, "tournamentId" : this.props.tournamentId, "pool":"A", "metaData": {"LogoPath": TeamLogoPath}, "playerId":this.state.UserId};
+    axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/LogEventRequest', teamData)
+      .then(res => { 
+        console.log(res.data)
+        if (res.data.scriptData.Response == "Success") {
+          this.updateTeams(res.data.scriptData.teams);
+          console.log('Registered successfully');
+          this.state.file = null;
+        }
+      });
+  }
+
+  updateTeams(teams){
+    let tableData = [];
+    let TeamNames = [];
+    if (teams) {
+      teams.forEach(team => {
+        tableData.push({
+          Name: team.teamName,
+          Logo: team.metaData.LogoPath,
+        });
+        TeamNames.push({
+          text: team.teamName,
+          key: team.teamName,
+          value: team.teamName
+        })
+      });            
+    }
+
+    this.setState({
+      tableData,
+      TeamNames,
+    });
   }
 
   removePlayer(e, k) {
@@ -179,15 +272,37 @@ export default class AdminDialog extends React.Component{
       tableData,
     });
   }
+
   removeTeam(e, k) {
-    e.preventDefault();
-    console.log(e, k.id);
-    let tableData = this.state.tableData;
-    tableData.splice(k.id, 1);
-    this.setState({
-      tableData,
-    });
-  }
+    let removeTeam = {
+      "@class": ".LogEventRequest",
+      "eventKey": "RemoveTeam",
+      "tournamentId": this.state.Tournament,
+      "teamName": k.id,
+      "playerId":this.state.UserId};
+    axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/LogEventRequest', removeTeam)
+      .then(res => { 
+        console.log(res.data)
+        let tableData = this.state.tableData;
+        tableData.splice(k.id, 1);
+
+        this.setState({
+          tableData,
+        })
+
+      });
+    }
+
+
+
+  //   e.preventDefault();
+  //   console.log(e, k.id);
+  //   let tableData = this.state.tableData;
+  //   tableData.splice(k.id, 1);
+  //   this.setState({
+  //     tableData,
+  //   });
+  // }
 
 // =============================================================================
 // =============================================================================
@@ -306,7 +421,7 @@ export default class AdminDialog extends React.Component{
       return (<Table.Row>
       <Table.Cell>{data.Name}</Table.Cell>
       <Table.Cell><Image src={data.Logo} size='tiny' circular /></Table.Cell>
-      <Table.Cell><Button id={key} circular color='red' icon='remove' onClick={this.removeTeam} /></Table.Cell>
+      <Table.Cell><Button id={data.Name} circular color='red' icon='remove' onClick={this.removeTeam} /></Table.Cell>
     </Table.Row>)})}
     </Table.Body>
   </Table></div>);
@@ -319,10 +434,10 @@ export default class AdminDialog extends React.Component{
       <Form>
     <Form.Field>
       <label>Name</label>
-      <input placeholder='First Name' id="Name"/>
+      <input placeholder='Full Name' id="Name"/>
     </Form.Field>
     <Form.Field>
-    <Select placeholder='Select Team' id="team" options={this.state.TeamNames} />
+    <Select placeholder='Select Team' id="team" onChange={this.selectedTeam} options={this.state.TeamNames} />
     </Form.Field>
     <Form.Field>
       <label>Logo</label>

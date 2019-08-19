@@ -1,0 +1,8 @@
+.modal {
+    left: unset !important;
+    right: unset !important;
+  }
+
+.image{
+    padding: 0.5rem !important;
+}

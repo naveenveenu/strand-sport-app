@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 //import gallaryImg from ".././resources/logo.png";
-import Slideshow from '../components/Slideshow';
+//import Slideshow from '../components/Slideshow';
 import image1 from './Slideshow/GalleryPhotos/Winners_2017-1.JPG';
 import image2 from './Slideshow/GalleryPhotos/Winners_2017-2.JPG';
 import image3 from './Slideshow/GalleryPhotos/Winners_2017-3.JPG';
@@ -12,38 +12,75 @@ import image8 from './Slideshow/GalleryPhotos/RunnersUp_2017-2.JPG';
 import image9 from './Slideshow/GalleryPhotos/BadminionsTeam-1.JPG';
 import image10 from './Slideshow/GalleryPhotos/BadminionsTeam-3.JPG';
 import image11 from './Slideshow/GalleryPhotos/BadminionsTeam-2.JPG';
-import {Modal, Image} from 'semantic-ui-react';
+import {Modal, Image, Card} from 'semantic-ui-react';
+
+
+const galleryClass ={
+  padding: 10,
+}
+
 
 export default class Gallery extends React.Component{
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state= {
-      images:[
-        {id:1, src: image1}, {id:2, src: image2}, {id:3, src: image3}, {id:4, src: image4}, 
-        {id:5, src: image5}, {id:6, src: image6}, {id:7, src: image7}, {id:8, src: image8}, 
-        {id:9, src: image9}, {id:10, src: image10}, {id:11, src: image11}, 
-      ]
+      images_2017:[],
+      images_2019:[]
+    };
+  }
+
+  componentWillMount(){
+    {
+      this.setState({
+        images_2017:[
+          {id:1, src: image1}, {id:2, src: image2}, {id:3, src: image3}, {id:4, src: image4}, 
+          {id:5, src: image5}, {id:6, src: image6}, {id:7, src: image7}, {id:8, src: image8}, 
+          {id:9, src: image9}, {id:10, src: image10}, {id:11, src: image11}, 
+        ],
+        images_2019:[
+          {id:8, src: image8}, {id:9, src: image9}, {id:10, src: image10}, {id:11, src: image11}, 
+        ]
+      });
     }
   }
 
   render(){
-   /*  let imag = this.props.slides.map((slide) => {
-      return <Image key={slide.id} url = {slide.src} />
-    });
- */
-console.log(this.state);
     return(
-        //<Slideshow slides = {this.state.images} />
-        <div>
-          {this.state.images.map(function(ind, key){
-            return (<Modal trigger={<Image src= {ind.src} size='tiny'/>}>
-            <Modal.Content image>
-              <Image wrapped src={ind.src} />
-            </Modal.Content>
-          </Modal>);
+      <div>
+        {this.props.year == "2017" ?
+          <Card.Group>{this.state.images_2017.map(function(ind, key){
+            return(
+              <Modal trigger={<Image src= {ind.src} size='medium' style={galleryClass}/>}>
+                <Modal.Content image>
+                  <Image src={ind.src} />
+                </Modal.Content>
+              </Modal>
+            )
           })}
-        </div>
+        </Card.Group>:<Card.Group>{this.state.images_2019.map(function(ind, key){
+          return(
+            <Modal trigger={<Image src= {ind.src} size='medium' style={galleryClass}/>}>
+              <Modal.Content image>
+                <Image wrapped src={ind.src} />
+              </Modal.Content>
+            </Modal>
+          )
+        })}
+        </Card.Group>
+        }
+      </div>  
+
+        // //<Slideshow slides = {this.state.images} />
+        // {/* <div>
+        //   {this.state.images.map(function(ind, key){
+        //     return (<Modal trigger={<Image src= {ind.src} size='tiny'/>}>
+        //     <Modal.Content image>
+        //       <Image wrapped src={ind.src} />
+        //     </Modal.Content>
+        //   </Modal>);
+        //   })}
+        // </div> */} 
     )
   }
 }

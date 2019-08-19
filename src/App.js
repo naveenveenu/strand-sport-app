@@ -58,7 +58,7 @@ class App extends Component {
     if(this.state.item === 'rules')
       return <Rules />
     if(this.state.item === 'admin')
-      return <AdminDialog userId={this.props.UserId} />;
+      return <AdminDialog userId={this.props.UserId} tournamentId ={this.props.TournamentId} />;
     return <div> This is Home Page </div>
   }
 

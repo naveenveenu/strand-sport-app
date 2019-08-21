@@ -95,7 +95,7 @@ class App extends Component {
               </Dropdown.Menu>
             </Dropdown>
 
-            <Menu.Item href="#rules" name='Rules' id="rules" active={activeItem === 'rules'} />
+            <Menu.Item href="#rules" name='Rules' id="rules" active={activeItem === 'rules'} onClick={this.selected} />
             {this.props.showAdmin?<Menu.Item><Link id="admin" onClick={this.selected} to="/login">Admin</Link></Menu.Item>:<div />}
           </Menu.Menu>
         </Menu>

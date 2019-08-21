@@ -54,7 +54,7 @@ class App extends Component {
     if(this.state.item === 'gallery')
       return <Gallery year={this.state.year} />
     if(this.state.item === 'fixtures')
-      return <Fixtures />
+      return <Fixtures userId={this.props.UserId} tournamentId ={this.props.TournamentId}/>
     if(this.state.item === 'rules')
       return <Rules />
     if(this.state.item === 'admin')

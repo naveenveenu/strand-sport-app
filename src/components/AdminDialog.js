@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Button, Tab, Form, Table, Image, Select, Segment, Card} from 'semantic-ui-react';
 import axios from 'axios';
+import Login from './Login';
 
 export default class AdminDialog extends React.Component{
   constructor(props) {
@@ -33,6 +34,7 @@ export default class AdminDialog extends React.Component{
       Tournament: this.props.tournamentId,
       UserId: this.props.userId,
     };
+    this.setLogin = this.setLogin.bind(this);
     this.selectTFixture = this.selectTFixture.bind(this);
     this.selectPlayers = this.selectPlayers.bind(this);
     this.selectFixture = this.selectFixture.bind(this);
@@ -55,7 +57,7 @@ export default class AdminDialog extends React.Component{
     this.listTeams = this.listTeams.bind(this);
     this.selectedTeam = this.selectedTeam.bind(this);
 
-    this.listTeams();
+    // this.listTeams();
   }
 
   selectedTeam(e, data) {
@@ -134,10 +136,10 @@ export default class AdminDialog extends React.Component{
   // }
 
   listTeams(e) {
-    let tournamentData = {"@class": ".LogEventRequest", "eventKey": "ListTeamsInTournament", "tournamentId": this.state.Tournament, "playerId":this.state.UserId};
+    console.log("list teams", this.props.tournamentId, this.state.userId);
+    let tournamentData = {"@class": ".LogEventRequest", "eventKey": "ListTeamsInTournament", "tournamentId": this.props.tournamentId, "playerId":this.state.userId};
     axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/LogEventRequest', tournamentData)
       .then(res => {
-        console.log(res.data);
         let teams = res.data.scriptData.teams;
         this.updateTeams(teams);
       });
@@ -530,11 +532,10 @@ export default class AdminDialog extends React.Component{
         {'  V/S  '}
         <Select placeholder='Select Team' id={"teamB"} onChange={(e, key) => this.selectTFixture(e, key, "fixtureTeam2")} options={this.state.TeamNames} />
       </div>
-    <Card.Group>
+    <Card.Group itemsPerRow ={2}>
       <Card  color='red'  >
         <Card.Content>
-          <Card.Header>TeamA vs TeamB</Card.Header>
-          <Card.Meta>Play1</Card.Meta>
+          <Card.Header>Men's Double-I</Card.Header>
           <Card.Description>
             {this.getFixtureTypes('first')}
             {this.selectPlayers()}
@@ -544,8 +545,7 @@ export default class AdminDialog extends React.Component{
 
       <Card  color='orange'  >
         <Card.Content>
-          <Card.Header>TeamA vs TeamB</Card.Header>
-          <Card.Meta>Play2</Card.Meta>
+          <Card.Header>Men's Double-II</Card.Header>
           <Card.Description>{this.getFixtureTypes('second')}{this.selectPlayers()}</Card.Description>
 
         </Card.Content>
@@ -553,16 +553,14 @@ export default class AdminDialog extends React.Component{
 
       <Card  color='yellow'  >
         <Card.Content>
-          <Card.Header>TeamA vs TeamB</Card.Header>
-          <Card.Meta>Play2</Card.Meta>
+          <Card.Header>Woman's Double</Card.Header>
           <Card.Description>{this.getFixtureTypes('third')}{this.selectPlayers()}</Card.Description>
         </Card.Content>
       </Card>
 
       <Card  color='green'  >
         <Card.Content>
-          <Card.Header>TeamA vs TeamB</Card.Header>
-          <Card.Meta>Play2</Card.Meta>
+          <Card.Header>Mix Doubles</Card.Header>
           <Card.Description>{this.getFixtureTypes('fourth')}{this.selectPlayers()}</Card.Description>
         </Card.Content>
       </Card>
@@ -581,15 +579,24 @@ export default class AdminDialog extends React.Component{
 ]
 this.setState({
   panes,
-})
+});
   }
 
-
+  setLogin(obj) {
+    console.log("Admin obj", obj);
+    this.setState({
+      successfulLogin: obj.loginStatus,
+      userId: obj.userId,
+    });
+    this.listTeams();
+  }
+ 
   render(){
     return(
-      <Container style={{marginTop:'10px' }} >
-        <Tab menu={{ secondary: true, pointing: true }} panes={this.state.panes} />
-      </Container>
+      <div>{this.state.successfulLogin? <Container style={{marginTop:'10px' }} >
+      <Tab menu={{ secondary: true, pointing: true }} panes={this.state.panes} />
+    </Container>: <Login setLogin={this.setLogin} />}</div>
+      
     );
   }
 }

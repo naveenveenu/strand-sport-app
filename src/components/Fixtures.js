@@ -14,7 +14,7 @@ export default class Fixtures extends React.Component{
   }
 
   componentDidMount(){
-
+    console.log(this.props.tournamentId, this.props.userId )
     let tournamentData = {"@class": ".LogEventRequest", "eventKey": "ListMatchesInTournament", "tournamentId": this.props.tournamentId, "playerId":this.props.userId};
     axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/LogEventRequest', tournamentData)
       .then(res => {

@@ -10,6 +10,7 @@ import Teams from './components/Teams';
 import Gallery from './components/Gallery';
 import Fixtures from './components/Fixtures';
 import Rules from './components/Rules';
+import Login from './components/Login';
 import Home from './components/Home';
 import Modal from './components/Modal/Modal';
 
@@ -54,12 +55,14 @@ class App extends Component {
     if(this.state.item === 'gallery')
       return <Gallery year={this.state.year} />
     if(this.state.item === 'fixtures')
-      return <Fixtures userId={this.props.UserId} tournamentId ={this.props.TournamentId}/>
+      return <Fixtures userId={this.props.UserId} tournamentId ={'5d3d3ad413e61004e5c0ffc8-1564298778175'}/>
     if(this.state.item === 'rules')
       return <Rules />
+    if(this.state.item === 'login')
+      return <Login />
     if(this.state.item === 'admin')
-      return <AdminDialog userId={this.props.UserId} tournamentId ={this.props.TournamentId} />;
-    return <div> This is Home Page </div>
+      return <AdminDialog userId={this.props.UserId} tournamentId ={'5d3d3ad413e61004e5c0ffc8-1564298778175'} />;
+    return <Home />
   }
 
   render() {
@@ -95,8 +98,8 @@ class App extends Component {
               </Dropdown.Menu>
             </Dropdown>
 
-            <Menu.Item href="#rules" name='Rules' id="rules" active={activeItem === 'rules'} />
-            {this.props.showAdmin?<Menu.Item><Link id="admin" onClick={this.selected} to="/login">Admin</Link></Menu.Item>:<div />}
+            <Menu.Item href="#rules" name='Rules' id="rules" active={activeItem === 'rules'} onClick={this.selected} />
+            <Menu.Item><Link id="admin" onClick={this.selected} to="/login">Admin</Link></Menu.Item>
           </Menu.Menu>
         </Menu>
         {this.loadComponent()}

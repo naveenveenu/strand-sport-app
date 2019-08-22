@@ -81,9 +81,9 @@ export default class Fixtures extends React.Component{
 
            <Divider vertical>
              <Button.Group>
-               <Button positive={key[0].win}>{key[0].score}</Button>
+               <Button  positive={key[0].win}>{key[0].score}</Button>
                <Button.Or text='34' />
-               <Button positive={key[1].win}>{key[1].score}</Button>
+               <Button  positive={key[1].win}>{key[1].score}</Button>
              </Button.Group>
            </Divider>
          </Segment>

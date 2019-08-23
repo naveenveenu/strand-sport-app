@@ -1,70 +1,57 @@
 import React from 'react';
-import {Menu, Icon, Table, Label} from 'semantic-ui-react';
+import { Table } from 'semantic-ui-react';
+import axios from 'axios';
 
 export default class Standings extends React.Component{
 
-
-  componentWillMount(){
-    {
-      this.setState({
-        pt_2019: ["Pos.", "TEAMS", "PLAYED", "WON", "LOST", "TMW", "TML", "POINTS"]
-      });
+  constructor(props){
+    super(props);
+    this.state = {
+      standingsData: []
     }
+  }
+  componentDidMount(){
+    let tournamentData = {"@class": ".LogEventRequest", "eventKey": "TournamentLeaderBoard", "tournamentId": this.props.tournamentId, "playerId":this.props.userId};
+    axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/LogEventRequest', tournamentData)
+      .then(res => {
+          var standingsData = res.data.scriptData.leaderboardDetails;
+          this.setState({standingsData});
+      });
   }
 
 
   render(){
     return(
-      // <div>Standings Page {this.props.year}</div>
       <div>
         <Table celled>
-    <Table.Header>
-      <Table.Row>
-      <Table.HeaderCell>Pos.</Table.HeaderCell>
-        <Table.HeaderCell>TEAMS</Table.HeaderCell>
-        <Table.HeaderCell>Played</Table.HeaderCell>
-        <Table.HeaderCell>Won</Table.HeaderCell>
-        <Table.HeaderCell>Lost</Table.HeaderCell>
-        <Table.HeaderCell>TMPW</Table.HeaderCell>
-        <Table.HeaderCell>TML</Table.HeaderCell>
-        <Table.HeaderCell>TP</Table.HeaderCell>
-      </Table.Row>
-    </Table.Header>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>TEAMS</Table.HeaderCell>
+              <Table.HeaderCell>Played</Table.HeaderCell>
+              <Table.HeaderCell>Won</Table.HeaderCell>
+              <Table.HeaderCell>Lost</Table.HeaderCell>
+              <Table.HeaderCell>TMPW</Table.HeaderCell>
+              <Table.HeaderCell>TML</Table.HeaderCell>
+              <Table.HeaderCell>TP</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
 
-    <Table.Body>
-      <Table.Row>
-        <Table.Cell collapsing>
-          <Label ribbon color='olive'>First</Label>
-        </Table.Cell>
-        <Table.Cell collapsing>Cell</Table.Cell>
-        <Table.Cell collapsing>Cell</Table.Cell>
-        <Table.Cell collapsing>Cell</Table.Cell>
-        <Table.Cell collapsing>Cell</Table.Cell>
-        <Table.Cell collapsing>Cell</Table.Cell>
-        <Table.Cell collapsing>Cell</Table.Cell>
-      </Table.Row>
-      <Table.Row>
-        <Table.Cell collapsing>Cell</Table.Cell>
-        <Table.Cell collapsing>Cell</Table.Cell>
-        <Table.Cell collapsing >Cell</Table.Cell>
-        <Table.Cell collapsing>Cell</Table.Cell>
-        <Table.Cell collapsing>Cell</Table.Cell>
-        <Table.Cell collapsing>Cell</Table.Cell>
-        <Table.Cell collapsing>Cell</Table.Cell>
-        <Table.Cell collapsing>Cell</Table.Cell>
-      </Table.Row>
-      <Table.Row>
-        <Table.Cell collapsing>Cell</Table.Cell>
-        <Table.Cell collapsing>Cell</Table.Cell>
-        <Table.Cell collapsing>Cell</Table.Cell>
-        <Table.Cell collapsing>Cell</Table.Cell>
-        <Table.Cell collapsing>Cell</Table.Cell>
-        <Table.Cell collapsing>Cell</Table.Cell>
-        <Table.Cell collapsing>Cell</Table.Cell>
-        <Table.Cell collapsing>Cell</Table.Cell>
-      </Table.Row>
-    </Table.Body>
-  </Table>
+          <Table.Body>
+          {this.state.standingsData.map(function(key, ind){
+            return (
+              <Table.Row>
+                <Table.Cell collapsing>{key.teamName}</Table.Cell>
+                <Table.Cell collapsing>{key.MatchesPlayed}</Table.Cell>
+                <Table.Cell collapsing>{key.wins}</Table.Cell>
+                <Table.Cell collapsing>{key.losses}</Table.Cell>
+                <Table.Cell collapsing>{key.TMW}</Table.Cell>
+                <Table.Cell collapsing>{key.TML}</Table.Cell>
+                <Table.Cell collapsing>{key.pointsWon}</Table.Cell>
+              </Table.Row>
+            )
+          })}
+          </Table.Body>
+        </Table>
       </div>
     );
   }

@@ -13,6 +13,7 @@ import Rules from './components/Rules';
 import Login from './components/Login';
 import Home from './components/Home';
 import Modal from './components/Modal/Modal';
+import axios from 'axios';
 
 import logo from './resources/strandLogo.png';
 
@@ -22,7 +23,7 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {check: true, item:'', year:''};
+    this.state = {check: true, item:'', year:'', userId:'', tournamentId:''};
     this.loadComponent = this.loadComponent.bind(this);
     this.selectedItem = this.selectedItem.bind(this);
     this.selected = this.selected.bind(this);
@@ -46,22 +47,42 @@ class App extends Component {
     });
   }
 
+  componentWillMount(){
+    let userCredentials = {"userName": "guest", "password": "guest123", "@class" : ".AuthenticationRequest"};
+    axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/AuthenticationRequest', userCredentials)
+        .then(res => {
+          console.log(res.data);
+          console.log(res.data.userId)
+          if (res.data.userId) {
+            console.log('login successful');
+            this.setState({
+              userId : res.data.userId,
+              tournamentId : '5d3d3ad413e61004e5c0ffc8-1564298778175',
+            })
+          }else{
+            console.log("Login Not Successful")
+          }
+        })
+        .catch(function (error){
+            console.log(error);
+        });
+  }
   loadComponent() {
     console.log(this.state.item);
     if(this.state.item === 'standings')
-      return <Standings year={this.state.year} />
+      return <Standings year={this.state.year} userId={this.state.userId} tournamentId ={this.state.tournamentId}/>
     if(this.state.item === 'teams')
       return <Teams year={this.state.year} />
     if(this.state.item === 'gallery')
       return <Gallery year={this.state.year} />
     if(this.state.item === 'fixtures')
-      return <Fixtures userId={this.props.UserId} tournamentId ={'5d3d3ad413e61004e5c0ffc8-1564298778175'}/>
+      return <Fixtures userId={this.state.userId} tournamentId ={this.state.tournamentId}/>
     if(this.state.item === 'rules')
       return <Rules />
     if(this.state.item === 'login')
       return <Login />
     if(this.state.item === 'admin')
-      return <AdminDialog userId={this.props.UserId} tournamentId ={'5d3d3ad413e61004e5c0ffc8-1564298778175'} />;
+      return <AdminDialog userId={this.state.userId} tournamentId ={this.state.tournamentId} />;
     return <Home />
   }
 

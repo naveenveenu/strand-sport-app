@@ -12,6 +12,7 @@ export default class Standings extends React.Component{
   }
   componentDidMount(){
     let tournamentData = {"@class": ".LogEventRequest", "eventKey": "TournamentLeaderBoard", "tournamentId": this.props.tournamentId, "playerId":this.props.userId};
+    
     axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/LogEventRequest', tournamentData)
       .then(res => {
         console.log(res.data);

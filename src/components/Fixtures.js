@@ -37,8 +37,8 @@ export default class Fixtures extends React.Component{
             if(subMatch.team1Score > subMatch.team2Score) {
               p = true;
             }
-            segment.push({"Name": team1, "players": t1players, "score": subMatch.team1Score, "win": p, "trump": subMatch.team1TrumpMatch});
-            segment.push({"Name": team2, "players": t2players, "score": subMatch.team2Score, "win": !p, "trump": subMatch.team2TrumpMatch});
+            segment.push({"Name": team1, "players": t1players, "score": subMatch.team1Score, "win": p, "trump": subMatch.team1TrumpMatch, matchType: subMatch.subMatchType});
+            segment.push({"Name": team2, "players": t2players, "score": subMatch.team2Score, "win": !p, "trump": subMatch.team2TrumpMatch, matchType: subMatch.subMatchType});
             subMatchJson.push(segment);
           }
           let teamData = {"@class": ".LogEventRequest", "eventKey": "ListTeamsInTournament", "tournamentId": this.props.tournamentId, "playerId":this.props.userId};
@@ -98,10 +98,14 @@ export default class Fixtures extends React.Component{
                       </Grid.Column>
 
                       <Grid.Column floated="right">
-                      <h1>{key[1].Name}</h1>
+                      <h1 style={{float: "right"}}>{key[1].Name}</h1>
+                      <br />
+                      <br />
+                      <div style={{float: "right"}}>
                        {key[1].players.map(function(keyt, ind){
                          return <li>{keyt}</li>
                        }) }
+                       </div>
                       </Grid.Column>
                     </Grid>
                     <Divider vertical>V/S</Divider>
@@ -123,7 +127,7 @@ export default class Fixtures extends React.Component{
                <Image size='small' src={''} floated='left' />
                <h1>{subkey[0].trump?<Label color='red'>
                 T
-              </Label>:<div/>}{subkey[0].Name}</h1>
+              </Label>:<div/>}{subkey[0].matchType}</h1>
                {subkey[0].players.map(function(key1, ind){
                  return <li>{key1}</li>
                }) }
@@ -132,20 +136,23 @@ export default class Fixtures extends React.Component{
 
            <Grid.Column verticalAlign='middle'>
              <Image size='small' src={''} floated='right'/>
-             <h1>{subkey[1].trump?<Label color='red'>
+             <h1 style={{float: "right"}}>{subkey[1].trump?<Label color='red'>
               T
-            </Label>:<div/>}{subkey[1].Name}</h1>
+            </Label>:<div/>}{subkey[1].matchType}</h1>
+            <br />
+            <br />
+            <div style={{float: "right"}}>
              {subkey[1].players.map(function(key2, ind){
                return <li>{key2}</li>
              }) }
-
+             </div>
            </Grid.Column>
          </Grid>
 
          <Divider vertical>
            <Button.Group>
              <Button  positive={key[0].win}>{key[0].score}</Button>
-             <Button.Or text='34' />
+             <Button.Or text="" />
              <Button  positive={key[1].win}>{key[1].score}</Button>
            </Button.Group>
          </Divider>

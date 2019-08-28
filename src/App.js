@@ -72,7 +72,7 @@ class App extends Component {
     if(this.state.item === 'standings')
       return <Standings year={this.state.year} userId={this.state.userId} tournamentId ={this.state.tournamentId}/>
     if(this.state.item === 'teams')
-      return <Teams year={this.state.year} />
+      return <Teams year={this.state.year} tournamentId ={this.state.tournamentId} userId={this.state.userId}/>
     if(this.state.item === 'gallery')
       return <Gallery year={this.state.year} />
     if(this.state.item === 'fixtures')

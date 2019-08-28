@@ -17,14 +17,14 @@ export default class Teams extends React.Component{
     //   Tournament: '5d3d3ad413e61004e5c0ffc8-1564298778175',
     // };
   }
- 
+
   componentWillMount(){
     {
-      let tournamentData = {"@class": ".LogEventRequest", "eventKey": "ListTeamsInTournament", "tournamentId": this.state.Tournament};
+      let tournamentData = {"@class": ".LogEventRequest", "eventKey": "ListTeamsInTournament", "tournamentId": this.props.tournamentId, "playerId":this.props.userId};
       axios.post('https://y384716iGW5P.preview.gamesparks.net/rs/debug/btxhd6ZiPxN5CWfkGiAM25pmCDA9NwG7/LogEventRequest', tournamentData)
       .then(res => {
         console.log(res.data);
-        let teams = res.data.teams;
+        let teams = res.data.scriptData.teams;
         this.state.tableData = [];
         teams.forEach(team => {
           this.state.tableData.push({
@@ -37,7 +37,7 @@ export default class Teams extends React.Component{
       this.setState({
         a: [{"image": teamSrc, "teamName": "Bad-Minions"}, {"image": teamSrc, "teamName": "Dracarys"},
               {"image": teamSrc, "teamName": "Padiayppas"}, {"image": teamSrc, "teamName": "Hurricanes"},
-              {"image": teamSrc, "teamName":"One-Eyed-Jacks"}, {"image": teamSrc, "teamName":"Satte-Pe-Satta"}, 
+              {"image": teamSrc, "teamName":"One-Eyed-Jacks"}, {"image": teamSrc, "teamName":"Satte-Pe-Satta"},
               {"image": teamSrc, "teamName": ""}],
         b: [teamSrc, teamSrc, teamSrc, teamSrc, teamSrc],
       });
@@ -72,7 +72,7 @@ export default class Teams extends React.Component{
         }
       </div>
 
-       
+
 
     );
   }
